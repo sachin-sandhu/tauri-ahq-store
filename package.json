@@ -7,7 +7,7 @@
   "dependencies": {
     "@radix-ui/react-context-menu": "^2.2.2",
     "@radix-ui/react-slot": "^1.1.0",
-    "@tauri-apps/plugin-fs": "2.0.2",
+    "@tauri-apps/plugin-fs": "2.0.3",
     "@tauri-apps/plugin-http": "2.0.1",
     "@tauri-apps/plugin-notification": "2.0.0",
     "@tauri-apps/plugin-process": "2.0.0",
@@ -55,7 +55,7 @@
     ]
   },
   "devDependencies": {
-    "@rsbuild/core": "1.1.6",
+    "@rsbuild/core": "1.1.7",
     "@rsbuild/plugin-babel": "1.0.3",
     "@rsbuild/plugin-react": "1.0.7",
     "@rsbuild/plugin-svgr": "1.0.5",
@@ -70,7 +70,7 @@
     "class-variance-authority": "^0.7.1",
     "cross-env": "^7.0.3",
     "cryptr": "^6.3.0",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "prettier": "^3.4.1",
     "shadcn": "^2.1.6"
