@@ -107,14 +107,6 @@ pub fn authenticate_process(pid: usize, time: bool) -> (bool, bool, String) {
 
     let running_for_secs = now() - process.start_time();
 
-    write_log(format!(
-      "{:?} {} {} {}",
-      &exe,
-      &exe_path,
-      &running_for_secs,
-      exe.contains(&exe_path)
-    ));
-
     if exe.contains(&exe_path) {
       if time && running_for_secs > 20 {
         return (false, admin, user);
