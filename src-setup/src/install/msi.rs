@@ -9,7 +9,7 @@ pub fn install_msi(path: &str) {
       &format!("\"{}\"", &path),
       "-Wait",
       "-ArgumentList",
-      "/quiet, /passive",
+      "/quiet, /passive, /norestart",
     ])
     .creation_flags(0x08000000)
     .spawn()
