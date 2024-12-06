@@ -1,7 +1,7 @@
 /*
 Native API
 */
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 const appWindow = getCurrentWebviewWindow();
@@ -55,7 +55,6 @@ function Render(props: AppProps) {
     [autoUpdate, setUpdate] = useState(false),
     [debug, setDebug] = useState(false),
     [apps, setApps] = useState<any>([]),
-    [zoom, setZoom] = useState(localStorage.getItem("zoom") || "100%"),
     app: JSX.Element = <></>;
 
   useEffect(() => {

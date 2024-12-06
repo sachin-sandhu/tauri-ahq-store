@@ -262,7 +262,8 @@ pub fn main() {
       get_dev_data,
       get_app_asset,
       get_devs_apps,
-      get_arch
+      get_arch,
+      set_scale
     ])
     .menu(|handle| Menu::new(handle))
     .build(context)
@@ -342,6 +343,11 @@ pub fn main() {
 }
 
 static mut COMMIT: Option<Commits> = None;
+
+#[tauri::command(async)]
+async fn set_scale(window: tauri::WebviewWindow, scale: f64) {
+  let _ = window.set_zoom(scale);
+}
 
 #[tauri::command(async)]
 async fn set_commit(commit: Commits) {

@@ -57,6 +57,7 @@ import { TbExternalLink } from "react-icons/tb";
 import { GrUpdate } from "react-icons/gr";
 import { FaGithub } from "react-icons/fa6";
 import { MdLabelImportant } from "react-icons/md";
+import setScale from "./app/zoom";
 
 document.body.setAttribute("native-scrollbar", "0");
 
@@ -117,6 +118,9 @@ if ((window as { __TAURI_INTERNALS__?: string }).__TAURI_INTERNALS__ == null) {
   loadRender(true);
 } else {
   if (appWindow.label == "main") {
+    const scale = localStorage.getItem("scale") || "100%";
+    setScale(scale);
+
     initDeveloperConfiguration();
 
     (async () => {

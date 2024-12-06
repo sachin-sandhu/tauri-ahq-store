@@ -31,6 +31,7 @@ import { TbZoomInArea } from "react-icons/tb";
 
 import "./styles.css";
 import { SiDaisyui, SiTailwindcss } from "react-icons/si";
+import setScale from "../zoom";
 
 interface InitProps {
   dark: boolean;
@@ -48,9 +49,21 @@ interface InitProps {
 }
 
 const zoom = [
+  "50%",
+  "55%",
+  "60%",
+  "65%",
+  "70%",
+  "75%",
+  "80%",
+  "85%",
+  "90%",
+  "95%",
   "100%",
   "125%",
   "150%",
+  "175%",
+  "200%"
 ];
 
 export default function Init(props: InitProps) {
@@ -163,9 +176,10 @@ export default function Init(props: InitProps) {
           klist="scale"
           list={zoom}
           Icon={TbZoomInArea}
-          initial={props.theme}
+          initial={localStorage.getItem("scale") || "100%"}
           onChange={(e) => {
-            (document.querySelector("html") as HTMLElement).style.zoom = e;
+            localStorage.setItem("scale", e);
+            setScale(e);
           }}
         />
 
