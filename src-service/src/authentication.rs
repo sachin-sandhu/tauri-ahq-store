@@ -13,7 +13,7 @@ pub fn is_current_logged_in_user(pid: usize) -> bool {
 
   let mut system = System::new();
   let mut users = Users::new();
-  users.refresh_list();
+  users.refresh();
   system.refresh_processes_specifics(
     ProcessesToUpdate::Some(&[Pid::from(pid)]),
     true,
@@ -68,7 +68,8 @@ pub fn authenticate_process(pid: usize, time: bool) -> (bool, bool, String) {
 
   let mut system = System::new();
   let mut users = Users::new();
-  users.refresh_list();
+
+  users.refresh();
   system.refresh_processes_specifics(
     ProcessesToUpdate::Some(&[Pid::from(pid)]),
     true,
