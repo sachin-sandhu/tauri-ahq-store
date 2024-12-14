@@ -29,8 +29,6 @@ pub enum InstallerFormat {
   WindowsInstallerExe,
 
   #[doc = "🔬 Planned as of v3\n\n"]
-  /// **Doesn't work**
-  /// **Won't be worked on, until other formats are supported**
   WindowsUWPMsix,
 
   #[doc = "🎯 Stable as of v2\n\n"]

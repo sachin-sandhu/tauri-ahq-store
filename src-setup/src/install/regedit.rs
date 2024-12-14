@@ -63,7 +63,7 @@ pub fn custom_uninstall() -> Option<()> {
               .unwrap();
             key.set_value("WindowsInstaller", &0u32).unwrap();
             key.set_value("UninstallString", &unst).unwrap();
-            
+
             if &y != unst {
               uninstall_str = y;
             } else {

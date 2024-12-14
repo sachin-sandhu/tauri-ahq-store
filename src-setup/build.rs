@@ -1,5 +1,5 @@
 fn main() {
-  slint_build::compile("ui/appWindow.slint").unwrap();
+  slint_build::compile("ui/index.slint").unwrap();
 
   #[cfg(windows)]
   {

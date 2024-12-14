@@ -19,6 +19,7 @@ service="$base/ahqstore_setup_linux_amd64"
 
 PS3='Which package manager shall we use?: '
 options=("apt" "rpm")
+
 select opt in "${options[@]}"
 do
   case $opt in

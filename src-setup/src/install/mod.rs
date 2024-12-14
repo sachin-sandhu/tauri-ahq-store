@@ -113,7 +113,7 @@ async fn plt_install(win: &AppWindow, client: &mut Client, files: &ReleaseData) 
 
   use crate::{
     install::msi::{install_msi, install_service},
-    utils::{get_service_dir, get_daemon, kill_daemon, run_daemon},
+    utils::{get_daemon, get_service_dir, kill_daemon, run_daemon},
   };
 
   win.set_msg("Downloading...".into());
@@ -130,7 +130,7 @@ async fn plt_install(win: &AppWindow, client: &mut Client, files: &ReleaseData) 
   .await;
 
   thread::sleep(Duration::from_secs(1));
-  
+
   win.set_counter(0.0);
 
   thread::sleep(Duration::from_secs(3));

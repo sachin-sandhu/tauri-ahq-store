@@ -3,9 +3,10 @@
 
 slint::include_modules!();
 
-use slint::{ComponentHandle, SharedString};
-use std::env::args;
+use slint::{run_event_loop, CloseRequestResponse, ComponentHandle, SharedString};
+use std::{env::args, sync::Arc, thread, time::Duration};
 
+mod center;
 mod elevate;
 mod install;
 
@@ -37,7 +38,36 @@ fn main() -> Result<(), slint::PlatformError> {
   };
 
   elevate::relaunch_if_needed(&update);
+
+  let shall_we_update = !matches!(update, InstallMode::None);
+
+  let splash = Splash::new().unwrap();
+  center::center_window(splash.window());
+  splash.show();
+
+  let splash_hwnd = splash.as_weak();
+
   let ui = AppWindow::new()?;
+  center::center_window(ui.window());
+
+  let ui_hwnd = ui.as_weak();
+  ui.window().hide();
+
+  std::thread::spawn(move || {
+    thread::sleep(Duration::from_secs(
+      if shall_we_update {
+        1
+      } else {
+        5
+      }
+    ));
+    splash_hwnd.upgrade_in_event_loop(|s| {
+      center::hide(s.window());
+    });
+    ui_hwnd.upgrade_in_event_loop(|f| {
+      f.show();
+    });
+  });
 
   if !matches!(update, InstallMode::None) && !matches!(update, InstallMode::Uninstall) {
     ui.set_counter(0.0);
@@ -55,7 +85,7 @@ fn main() -> Result<(), slint::PlatformError> {
   }
 
   ui.on_tos(|| {
-    let _ = open::that("https://ahqstore.github.io/en/tos");
+    let _ = open::that("https://ahqstore.github.io/tos");
   });
   ui.on_site(|| {
     let _ = open::that("https://ahqstore.github.io");
@@ -75,5 +105,10 @@ fn main() -> Result<(), slint::PlatformError> {
     }
   });
 
-  ui.run()
+  ui.window().on_close_requested(move || {
+    splash.hide();
+    CloseRequestResponse::HideWindow
+  });
+
+  run_event_loop()
 }
