@@ -39,15 +39,11 @@ export default function Developers(props: DevProps) {
         if (uid) {
           const hash = await generateGHUserHash(uid).catch(() => "");
 
-          console.log("Hash ", hash);
-
           const apps = await get_devs_apps(
             hash,
           );
 
-          console.log(apps);
           fetchApps(apps).then((apps) => {
-            console.log(apps);
             setPublishedApps(apps as appData[]);
           });
         }

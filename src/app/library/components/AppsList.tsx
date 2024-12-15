@@ -21,22 +21,38 @@ export default function AppsList(props: Props) {
   const [rawApps, setRawApps] = useState(0);
 
   async function parseAppsData() {
-    const apps = await listAllApps();
-    if (Object.keys(apps).length === 0) {
-      setRawApps(1);
-    }
-    const resolvedApps = await fetchApps(Object.keys(apps));
-    const icons = await Promise.all(
-      (resolvedApps as appData[]).map((x) => getResource(x.appId, "0")),
-    );
+    try {
+      const apps = await listAllApps();
 
-    setIcons(icons);
-    setApps(resolvedApps as appData[]);
+      const appsKeys: string[] = Object.keys(apps);
+
+      const resolvedApps = await fetchApps(appsKeys) as appData[];
+
+      const icons = await Promise.all(
+        resolvedApps.map((x) => {
+          if (x.appId.includes("winget_app_super_unknown_")) {
+            return "/package.png";
+          } else {
+            return getResource(x.appId, "0");
+          }
+        }),
+      );
+
+      setIcons(icons);
+
+      if (Object.keys(apps).length === 0) {
+        setRawApps(1);
+      }
+      setApps(resolvedApps);
+    } catch (e) {
+      console.error(e);
+      setRawApps(2);
+    }
   }
 
   useEffect(() => {
     parseAppsData();
-    const timeout = setInterval(() => parseAppsData(), 5000);
+    const timeout = setInterval(() => parseAppsData(), 10_000);
 
     return () => clearInterval(timeout);
   }, []);
@@ -44,14 +60,13 @@ export default function AppsList(props: Props) {
   return (
     <div className="flex flex-col w-[98%] h-[100%] mx-auto">
       <div className="min-h-[auto] h-[100%] min-w-[100%] pb-[1rem] text-center">
-        {rawApps === 1 ? (
+        {(rawApps === 1 || rawApps === 2) ? (
           <h1
             className={`my-2 w-[100%] flex flex-row text-center items-center justify-center ${
               dark ? "text-slate-400" : "text-slate-700"
             }`}
           >
-            Install some apps to get the fun started{" "}
-            <GiPartyPopper size="1.5em" />
+            {rawApps === 1 ? <> Install some apps to get the fun started{" "} <GiPartyPopper size="1.5em" /></> : <>Something went wrong! ⚠️</>}
           </h1>
         ) : apps.length === 0 ? (
           <h1

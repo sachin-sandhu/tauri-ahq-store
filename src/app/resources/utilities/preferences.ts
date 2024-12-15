@@ -30,7 +30,7 @@ export default async function fetchPrefs(): Promise<appData> {
   mkdir("database", { baseDir: BaseDirectory.AppData }).catch((e) => e);
 
   const is_admin = await invoke<boolean>("is_an_admin").catch((e) => {
-    console.log(e);
+    console.warn(e);
 
     return true;
   });

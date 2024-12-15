@@ -23,7 +23,7 @@ export default async function fetchApps(
   if (typeof apps === "string") {
     return (await resolveApps([apps]))[0];
   } else if (Array.isArray(apps)) {
-    return await resolveApps([...apps]);
+    return await resolveApps(apps);
   } else {
     return [];
   }
@@ -65,7 +65,10 @@ export async function fetchAuthor(uid: string) {
 async function resolveApps(apps: string[]): Promise<appData[]> {
   let promises: Promise<appData>[] = [];
 
-  console.log(apps.find((s) => s == undefined));
+  if (apps == undefined) {
+    return [];
+  }
+  
   apps.forEach((appId) => {
     if (appId != undefined) {
       if (cache[appId]) {
@@ -77,7 +80,32 @@ async function resolveApps(apps: string[]): Promise<appData[]> {
       } else {
         promises.push(
           (async () => {
-            const app = await get_app(appId);
+            const app = await get_app(appId).catch((e) => {
+              console.warn("Failed to get app", appId, e);
+              return {
+                appDisplayName: "Unknown",
+                appId: `winget_app_super_unknown_${Math.random() * 2054568120}`,
+                authorId: "",
+                description: "This application has been removed or app id changed",
+                downloadUrls: [],
+                license_or_tos: "",
+                releaseTagName: "",
+                site: "",
+                source: "",
+                appShortcutName: "Unknown",
+                displayImages: [],
+                install: {
+                  free: () => { },
+                },
+                repo: {
+                  author: "", repo: "",
+                  free: () => { },
+                },
+                verified: false,
+                resources: {},
+                version: "none"
+              } as ApplicationData;
+            });
 
             const appData = {
               ...app,

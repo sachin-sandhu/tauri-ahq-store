@@ -68,7 +68,7 @@ export default function AppCard(props: {
       getResource(props.id, "0")
         .then(setIcon)
         .catch((e) => {
-          console.log(e);
+          console.warn(e);
           setIcon("/package.png");
         });
     })();

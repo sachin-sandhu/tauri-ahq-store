@@ -31,7 +31,7 @@ export function get_sha() {
     sendWsRequest(WebSocketMessage.GetSha(), (val) => {
       if (val.method == "SHAId") {
         const sha = val.data as string;
-        console.log(sha);
+
         invoke("set_commit", {
           commit: sha
         });

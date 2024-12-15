@@ -117,7 +117,6 @@ appWindow.listen<string[]>("ws_resp", async ({ payload: pload }) => {
             resolve(toObj);
           }
           if (toObj.method == "TerminateBlock" && ref_id != 0) {
-            console.log("Removing ", ref_id);
             return false;
           }
 
@@ -126,8 +125,8 @@ appWindow.listen<string[]>("ws_resp", async ({ payload: pload }) => {
       }
 
     } catch (e) {
-      console.log(pload);
-      console.log(e);
+      console.warn(pload);
+      console.warn(e);
     }
   }
 });

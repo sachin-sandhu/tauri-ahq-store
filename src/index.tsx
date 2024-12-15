@@ -130,7 +130,7 @@ if ((window as { __TAURI_INTERNALS__?: string }).__TAURI_INTERNALS__ == null) {
         document.querySelector("html")?.setAttribute("data-os", "win32");
       }
       setTimeout(async () => {
-        appWindow.setDecorations(true).catch(console.log);
+        appWindow.setDecorations(true).catch(console.warn);
 
         appWindow.show();
         if (!(await appWindow.isMaximized())) {

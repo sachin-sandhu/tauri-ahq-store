@@ -74,7 +74,7 @@ pub fn launch() -> impl Future<Output = ()> {
   async move {
     start_exe_daemon().await;
     loop {
-      write_log("[EXE]: Loop");
+      println!("[EXE]: Loop");
 
       if let Ok(()) = pipe.connect().await {
         unsafe { CONNECTED = true };
@@ -124,10 +124,17 @@ pub fn launch() -> impl Future<Output = ()> {
           continue;
         }
 
+        let mut count: u8 = 0;
+
         'a: loop {
-          if !is_current_logged_in_user(process_id as usize) {
-            let _ = pipe.disconnect();
-            break 'a;
+          count += 1;
+
+          if count >= 30 {
+            if !is_current_logged_in_user(process_id as usize) {
+              let _ = pipe.disconnect();
+              break 'a;
+            }
+            count = 0;
           }
 
           match read_msg(pipe).await {
@@ -140,7 +147,7 @@ pub fn launch() -> impl Future<Output = ()> {
             }
             _ => {}
           }
-          tokio::time::sleep(Duration::from_nanos(10)).await;
+          tokio::time::sleep(Duration::from_millis(10)).await;
         }
       }
       unsafe {
@@ -189,7 +196,6 @@ pub async fn read_msg(pipe: &mut NamedPipeServer) -> ReadResponse {
             e => {
               let err = format!("{e:?}");
 
-              write_log(&err);
               if &err != "Uncategorized" {
                 let _ = pipe.disconnect();
                 return ReadResponse::Disconnect;
