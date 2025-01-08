@@ -6,7 +6,6 @@
   "license": "Creative Commons Attribution Non Commercial 3.0",
   "dependencies": {
     "@radix-ui/react-context-menu": "^2.2.3",
-    "ahqstore-types": "link:src-ahqstore-types\\pkg",
   },
   "scripts": {
     "start": "cross-env BROWSER=none rsbuild dev",
