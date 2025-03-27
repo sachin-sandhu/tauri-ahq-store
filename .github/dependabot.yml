@@ -11,5 +11,205 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
+      cronjob: "@daily"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "0/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 0 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "1/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 1 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "2/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 2 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "3/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 3 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "4/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 4 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "5/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 5 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "6/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 6 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "7/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 7 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "8/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 8 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "9/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 9 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "10/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 10 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "11/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 11 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "12/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 12 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "13/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 13 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "14/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
       cronjob: "0 14 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "15/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 15 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "16/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 16 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "17/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 17 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "18/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 18 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "19/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 19 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "20/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 20 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "21/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 21 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "22/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 22 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "23/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 23 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "24/" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 24 * * *"
     open-pull-requests-limit: 31
