@@ -11,4 +11,4 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "daily at 8 am"
+      cronjob: "0 8 * * *"
