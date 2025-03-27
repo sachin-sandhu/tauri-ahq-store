@@ -12,4 +12,4 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 8 * * *"
-    pull-requests-limit: 30
+    open-pull-requests-limit: 30
