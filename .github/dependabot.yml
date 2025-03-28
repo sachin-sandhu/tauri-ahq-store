@@ -11,5 +11,5 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 3 * * *"
+      cronjob: "0 14 * * *"
     open-pull-requests-limit: 31
