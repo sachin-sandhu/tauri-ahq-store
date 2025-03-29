@@ -11,5 +11,21 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 23 * * *"
+      cronjob: "0 33 * * *"
     open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/1" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 3 * * *"
+    open-pull-requests-limit: 31
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/2" # Location of package manifests
+    target-branch: dev
+    schedule:
+      interval: "cron"
+      cronjob: "0 3 * * *"
+    open-pull-requests-limit: 31    
