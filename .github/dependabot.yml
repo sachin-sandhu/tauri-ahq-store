@@ -11,8 +11,9 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 7 * * *"
+      cronjob: "0 16 * * *"
     open-pull-requests-limit: 31
+    timezone: "America/New_York"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/1" # Location of package manifests
