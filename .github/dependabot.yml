@@ -12,8 +12,8 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 16 * * *"
+      timezone: "America/New_York"
     open-pull-requests-limit: 31
-    timezone: "America/New_York"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/1" # Location of package manifests
