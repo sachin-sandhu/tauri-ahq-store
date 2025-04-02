@@ -11,7 +11,7 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 16 * * *"
+      cronjob: "0 7 * * *"
       timezone: "America/New_York"
     open-pull-requests-limit: 31
 
