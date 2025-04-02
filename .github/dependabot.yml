@@ -20,7 +20,7 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 8 * * *"
+      cronjob: "0 18 * * *"
     open-pull-requests-limit: 31
 
   - package-ecosystem: "npm" # See documentation for possible values
@@ -28,5 +28,5 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 9 * * *"
+      cronjob: "0 18 * * *"
     open-pull-requests-limit: 31    
