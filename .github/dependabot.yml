@@ -10,8 +10,7 @@ updates:
     directory: "/" # Location of package manifests
     target-branch: dev
     schedule:
-      interval: "cron"
-      cronjob: "0 7 * * *"
+      interval: "quarterly"
       timezone: "America/New_York"
     open-pull-requests-limit: 31
 
