@@ -5,7 +5,7 @@
   "private": true,
   "license": "Creative Commons Attribution Non Commercial 3.0",
   "dependencies": {
-    "@radix-ui/react-context-menu": "^2.2.3"
+    "@radix-ui/react-context-menu": "^2.2.11"
   },
   "scripts": {
     "start": "cross-env BROWSER=none rsbuild dev",
