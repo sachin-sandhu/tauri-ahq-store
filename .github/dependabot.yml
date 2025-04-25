@@ -10,7 +10,7 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 16 * * *"
+      cronjob: "0 0 5 31 2 ?"
       timezone: "America/New_York"
     open-pull-requests-limit: 31
 
@@ -26,5 +26,5 @@ updates:
     target-branch: dev
     schedule:
       interval: "cron"
-      cronjob: "0 18 * * *"
+      cronjob: "0 0 5 31 2 ?"
     open-pull-requests-limit: 31    
