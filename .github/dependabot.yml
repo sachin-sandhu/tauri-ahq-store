@@ -10,7 +10,7 @@ updates:
     target-branch: dev
     schedule:
       interval: "yearly"
-      cronjob: "0 0 5 31 2 ?"
+      cronjob: "0 5 * * 1#1"
       timezone: "America/New_York"
     open-pull-requests-limit: 31
 
