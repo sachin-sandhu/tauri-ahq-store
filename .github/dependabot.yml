@@ -9,9 +9,9 @@ updates:
     directory: "/" # Location of package manifests
     target-branch: dev
     schedule:
-      interval: "yearly"
-      cronjob: "0 9 * * mon%2"
-      timezone: "America/New_York"
+      interval: "daily"
+      time: "09:20"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 31
 
   - package-ecosystem: "npm" # See documentation for possible values
