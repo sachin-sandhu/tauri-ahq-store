@@ -18,7 +18,8 @@ updates:
     directory: "/1" # Location of package manifests
     target-branch: dev
     schedule:
-      interval: "semiannually"
+      interval: "cron"
+      cronjob: "0 3 * * mon%2"
     open-pull-requests-limit: 31
 
   - package-ecosystem: "npm" # See documentation for possible values
