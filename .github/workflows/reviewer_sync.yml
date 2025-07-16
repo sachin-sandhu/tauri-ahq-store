@@ -24,6 +24,32 @@ jobs:
           import yaml
           import sys
 
+          def normalize_directory_pattern(directory):
+              """
+              Convert dependabot directory paths to proper CODEOWNERS patterns
+              Based on CODEOWNERS syntax rules and examples
+              """
+              # Remove leading/trailing whitespace
+              directory = directory.strip()
+              
+              # Ensure it starts with /
+              if not directory.startswith('/'):
+                  directory = '/' + directory
+              
+              # Handle special cases
+              if directory == '/':
+                  # Root directory - match everything at root level with /*
+                  return '/*'
+              
+              # For specific directories, we want to match the directory and all its contents
+              # Remove trailing slash first
+              if directory.endswith('/'):
+                  directory = directory.rstrip('/')
+              
+              # Add trailing slash to match directory contents
+              # This follows CODEOWNERS pattern: /scripts/ matches /scripts directory and all its contents
+              return f"{directory}/"
+
           def main():
               try:
                   # Read dependabot.yml file
@@ -49,12 +75,8 @@ jobs:
                                   directories = update['directories']
                               
                               for directory in directories:
-                                  # Normalize directory path - ensure it starts with /
-                                  if not directory.startswith('/'):
-                                      directory = '/' + directory
-                                  # Remove trailing slash unless it's root
-                                  if directory != '/' and directory.endswith('/'):
-                                      directory = directory.rstrip('/')
+                                  # Normalize directory path and convert to proper CODEOWNERS pattern
+                                  normalized_dir = normalize_directory_pattern(directory)
                                   
                                   reviewers_for_dir = []
                                   for reviewer in update['reviewers']:
@@ -66,7 +88,7 @@ jobs:
                                   
                                   if reviewers_for_dir:
                                       directory_reviewers.append({
-                                          'directory': directory,
+                                          'directory': normalized_dir,
                                           'reviewers': reviewers_for_dir
                                       })
 
@@ -122,18 +144,24 @@ jobs:
                       
                       end_index = next_section_index if next_section_index >= 0 else len(lines)
                       
-                      # Get current reviewers lines
+                      # Get current reviewers lines (look for directory patterns)
                       current_reviewers_lines = []
                       for i in range(dependabot_section_index + 1, end_index):
-                          if i < len(lines) and (lines[i].startswith('/') or lines[i].startswith('* @')):
-                              current_reviewers_lines.append(lines[i])
+                          if i < len(lines):
+                              line = lines[i].strip()
+                              # Match CODEOWNERS patterns: starts with /, contains @, or legacy * @ format
+                              if (line.startswith('/') and '@' in line) or line.startswith('* @'):
+                                  current_reviewers_lines.append(lines[i])
                       
                       # Check if reviewers need updating
                       if current_reviewers_lines != new_reviewers_lines:
-                          # Remove old reviewers lines
+                          # Remove old reviewers lines (look for directory patterns)
                           for i in range(end_index - 1, dependabot_section_index, -1):
-                              if i < len(lines) and (lines[i].startswith('/') or lines[i].startswith('* @')):
-                                  lines.pop(i)
+                              if i < len(lines):
+                                  line = lines[i].strip()
+                                  # Match CODEOWNERS patterns: starts with /, contains @, or legacy * @ format
+                                  if (line.startswith('/') and '@' in line) or line.startswith('* @'):
+                                      lines.pop(i)
                           
                           # Insert new reviewers lines
                           for i, line in enumerate(new_reviewers_lines):
