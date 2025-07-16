@@ -24,6 +24,9 @@ updates:
       interval: "cron"
       cronjob: "0 3 * * mon%2"
     open-pull-requests-limit: 31
+    reviewers: 
+      - "sachin.sandhu2@github.com"
+      - "org/cloud2-reviewers"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/2" # Location of package manifests
@@ -31,4 +34,7 @@ updates:
     schedule:
       interval: "yearly"
       cronjob: "0 0 5 31 2 ?"
-    open-pull-requests-limit: 31    
+    open-pull-requests-limit: 31   
+    reviewers: 
+      - "sachin.sandhu3@github.com"
+      - "org/cloud3-reviewers"
