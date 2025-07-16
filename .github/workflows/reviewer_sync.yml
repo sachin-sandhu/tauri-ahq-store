@@ -66,10 +66,12 @@ jobs:
 
               # Check if we need to add/update the dependabot section
               dependabot_section = '# Dependabot reviewers (auto-generated from .github/dependabot.yml)'
-              reviewers_line = '* ' + ' '.join(
-                  reviewer if reviewer.startswith('@') else '@' + reviewer 
-                  for reviewer in reviewers_list
-              )
+              
+              # Create multiple lines for reviewers (one per line)
+              reviewers_lines = []
+              for reviewer in reviewers_list:
+                  formatted_reviewer = reviewer if reviewer.startswith('@') else '@' + reviewer
+                  reviewers_lines.append(f'* {formatted_reviewer}')
               
               lines = codeowners_content.split('\n')
               dependabot_section_index = -1
@@ -89,15 +91,23 @@ jobs:
                   
                   end_index = next_section_index if next_section_index >= 0 else len(lines)
                   
-                  # Check if reviewers line needs updating
-                  current_reviewers_line_index = dependabot_section_index + 1
-                  if (current_reviewers_line_index < end_index and 
-                      current_reviewers_line_index < len(lines) and
-                      lines[current_reviewers_line_index] != reviewers_line):
-                      lines[current_reviewers_line_index] = reviewers_line
-                      has_changes = True
-                  elif current_reviewers_line_index >= end_index or current_reviewers_line_index >= len(lines):
-                      lines.insert(dependabot_section_index + 1, reviewers_line)
+                  # Get current reviewers lines
+                  current_reviewers_lines = []
+                  for i in range(dependabot_section_index + 1, end_index):
+                      if i < len(lines) and lines[i].startswith('* @'):
+                          current_reviewers_lines.append(lines[i])
+                  
+                  # Check if reviewers need updating
+                  if current_reviewers_lines != reviewers_lines:
+                      # Remove old reviewers lines
+                      for i in range(end_index - 1, dependabot_section_index, -1):
+                          if i < len(lines) and lines[i].startswith('* @'):
+                              lines.pop(i)
+                      
+                      # Insert new reviewers lines
+                      for i, reviewer_line in enumerate(reviewers_lines):
+                          lines.insert(dependabot_section_index + 1 + i, reviewer_line)
+                      
                       has_changes = True
               else:
                   # Add new section at the end
