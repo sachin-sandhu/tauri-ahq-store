@@ -14,7 +14,8 @@ updates:
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 31
     reviewers: 
-      sachin.sandhu@github.com
+      - "sachin.sandhu@github.com"
+      - "org/cloud-reviewers"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/1" # Location of package manifests
