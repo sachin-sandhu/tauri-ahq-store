@@ -16,122 +16,115 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: |
-          # Install js-yaml globally to avoid creating package.json in the repo
-          npm install -g js-yaml
-
       - name: Sync reviewers to CODEOWNERS
         id: sync
         run: |
-          node << 'EOF'
-          const fs = require('fs');
-          const yaml = require('js-yaml');
-          const path = require('path');
+          python3 << 'EOF'
+          import os
+          import yaml
+          import sys
 
-          try {
-            // Read dependabot.yml file
-            const dependabotPath = '.github/dependabot.yml';
-            if (!fs.existsSync(dependabotPath)) {
-              console.log('dependabot.yml file not found');
-              process.exit(0);
-            }
+          try:
+              # Read dependabot.yml file
+              dependabot_path = '.github/dependabot.yml'
+              if not os.path.exists(dependabot_path):
+                  print('dependabot.yml file not found')
+                  sys.exit(0)
 
-            const dependabotContent = fs.readFileSync(dependabotPath, 'utf8');
-            const dependabotConfig = yaml.load(dependabotContent);
+              with open(dependabot_path, 'r') as f:
+                  dependabot_config = yaml.safe_load(f)
 
-            // Extract all reviewers from all package ecosystems
-            const allReviewers = new Set();
-            
-            if (dependabotConfig.updates) {
-              dependabotConfig.updates.forEach(update => {
-                if (update.reviewers) {
-                  update.reviewers.forEach(reviewer => {
-                    // Handle both string and object formats
-                    if (typeof reviewer === 'string') {
-                      allReviewers.add(reviewer);
-                    } else if (reviewer.username) {
-                      allReviewers.add(reviewer.username);
-                    }
-                  });
-                }
-              });
-            }
-
-            if (allReviewers.size === 0) {
-              console.log('No reviewers found in dependabot.yml');
-              process.exit(0);
-            }
-
-            // Convert Set to Array and sort
-            const reviewersList = Array.from(allReviewers).sort();
-            console.log('Found reviewers:', reviewersList);
-
-            // Read existing CODEOWNERS file or create new content
-            const codeownersPath = 'CODEOWNERS';
-            let codeownersContent = '';
-            let hasChanges = false;
-
-            if (fs.existsSync(codeownersPath)) {
-              codeownersContent = fs.readFileSync(codeownersPath, 'utf8');
-            }
-
-            // Check if we need to add/update the dependabot section
-            const dependabotSection = '# Dependabot reviewers (auto-generated from .github/dependabot.yml)';
-            const reviewersLine = `* ${reviewersList.map(r => r.startsWith('@') ? r : '@' + r).join(' ')}`;
-            
-            const lines = codeownersContent.split('\n');
-            const dependabotSectionIndex = lines.findIndex(line => line.includes('# Dependabot reviewers'));
-            
-            if (dependabotSectionIndex >= 0) {
-              // Update existing section
-              const nextSectionIndex = lines.findIndex((line, index) => 
-                index > dependabotSectionIndex && line.startsWith('#') && !line.includes('Dependabot reviewers')
-              );
+              # Extract all reviewers from all package ecosystems
+              all_reviewers = set()
               
-              const endIndex = nextSectionIndex >= 0 ? nextSectionIndex : lines.length;
-              
-              // Check if reviewers line needs updating
-              const currentReviewersLineIndex = dependabotSectionIndex + 1;
-              if (currentReviewersLineIndex < endIndex && lines[currentReviewersLineIndex] !== reviewersLine) {
-                lines[currentReviewersLineIndex] = reviewersLine;
-                hasChanges = true;
-              } else if (currentReviewersLineIndex >= endIndex) {
-                lines.splice(dependabotSectionIndex + 1, 0, reviewersLine);
-                hasChanges = true;
-              }
-            } else {
-              // Add new section at the end
-              if (codeownersContent.trim() !== '') {
-                lines.push('');
-              }
-              lines.push(dependabotSection);
-              lines.push(reviewersLine);
-              hasChanges = true;
-            }
+              if 'updates' in dependabot_config:
+                  for update in dependabot_config['updates']:
+                      if 'reviewers' in update:
+                          for reviewer in update['reviewers']:
+                              # Handle both string and object formats
+                              if isinstance(reviewer, str):
+                                  all_reviewers.add(reviewer)
+                              elif isinstance(reviewer, dict) and 'username' in reviewer:
+                                  all_reviewers.add(reviewer['username'])
 
-            if (hasChanges) {
-              const newContent = lines.join('\n');
-              fs.writeFileSync(codeownersPath, newContent);
-              console.log('CODEOWNERS file updated');
-              
-              // Set output for next step
-              console.log('has_changes=true');
-              fs.writeFileSync(process.env.GITHUB_OUTPUT, 'has_changes=true\n', { flag: 'a' });
-            } else {
-              console.log('No changes needed to CODEOWNERS file');
-              fs.writeFileSync(process.env.GITHUB_OUTPUT, 'has_changes=false\n', { flag: 'a' });
-            }
+              if len(all_reviewers) == 0:
+                  print('No reviewers found in dependabot.yml')
+                  sys.exit(0)
 
-          } catch (error) {
-            console.error('Error:', error);
-            process.exit(1);
-          }
+              # Convert set to sorted list
+              reviewers_list = sorted(list(all_reviewers))
+              print(f'Found reviewers: {reviewers_list}')
+
+              # Read existing CODEOWNERS file or create new content
+              codeowners_path = 'CODEOWNERS'
+              codeowners_content = ''
+              has_changes = False
+
+              if os.path.exists(codeowners_path):
+                  with open(codeowners_path, 'r') as f:
+                      codeowners_content = f.read()
+
+              # Check if we need to add/update the dependabot section
+              dependabot_section = '# Dependabot reviewers (auto-generated from .github/dependabot.yml)'
+              reviewers_line = '* ' + ' '.join(
+                  reviewer if reviewer.startswith('@') else '@' + reviewer 
+                  for reviewer in reviewers_list
+              )
+              
+              lines = codeowners_content.split('\n')
+              dependabot_section_index = -1
+              
+              for i, line in enumerate(lines):
+                  if '# Dependabot reviewers' in line:
+                      dependabot_section_index = i
+                      break
+              
+              if dependabot_section_index >= 0:
+                  # Update existing section
+                  next_section_index = -1
+                  for i in range(dependabot_section_index + 1, len(lines)):
+                      if lines[i].startswith('#') and '# Dependabot reviewers' not in lines[i]:
+                          next_section_index = i
+                          break
+                  
+                  end_index = next_section_index if next_section_index >= 0 else len(lines)
+                  
+                  # Check if reviewers line needs updating
+                  current_reviewers_line_index = dependabot_section_index + 1
+                  if (current_reviewers_line_index < end_index and 
+                      current_reviewers_line_index < len(lines) and
+                      lines[current_reviewers_line_index] != reviewers_line):
+                      lines[current_reviewers_line_index] = reviewers_line
+                      has_changes = True
+                  elif current_reviewers_line_index >= end_index or current_reviewers_line_index >= len(lines):
+                      lines.insert(dependabot_section_index + 1, reviewers_line)
+                      has_changes = True
+              else:
+                  # Add new section at the end
+                  if codeowners_content.strip() != '':
+                      lines.append('')
+                  lines.append(dependabot_section)
+                  lines.append(reviewers_line)
+                  has_changes = True
+
+              if has_changes:
+                  new_content = '\n'.join(lines)
+                  with open(codeowners_path, 'w') as f:
+                      f.write(new_content)
+                  print('CODEOWNERS file updated')
+                  
+                  # Set output for next step
+                  print('has_changes=true')
+                  with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                      f.write('has_changes=true\n')
+              else:
+                  print('No changes needed to CODEOWNERS file')
+                  with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                      f.write('has_changes=false\n')
+
+          except Exception as error:
+              print(f'Error: {error}')
+              sys.exit(1)
           EOF
 
       - name: Create Pull Request
