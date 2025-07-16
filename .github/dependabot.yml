@@ -15,7 +15,7 @@ updates:
     open-pull-requests-limit: 31
     reviewers: 
       - "sachin-sandhu"
-      - "sachin-sandhu33"
+      - "randhircs"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/1" # Location of package manifests
@@ -25,8 +25,8 @@ updates:
       cronjob: "0 3 * * mon%2"
     open-pull-requests-limit: 31
     reviewers: 
-      - "sachin-sandhu2"
-      - "org/cloud-reviewers"
+      - "thavaahariharangit"
+      - "abhishekbhaskar"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/2" # Location of package manifests
@@ -36,5 +36,5 @@ updates:
       cronjob: "0 0 5 31 2 ?"
     open-pull-requests-limit: 31   
     reviewers: 
-      - "sachin-sandhu3"
-      - "org/cloud-reviewers"
+      - "sachin-sandhu"
+      - "robaiken"
