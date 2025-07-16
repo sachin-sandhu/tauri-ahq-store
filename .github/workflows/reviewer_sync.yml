@@ -3,7 +3,7 @@ name: Sync Dependabot Reviewers to CODEOWNERS
 on:
   push:
     branches:
-      - main
+      - dev
     paths:
       - '.github/dependabot.yml'
   workflow_dispatch:
