@@ -34,26 +34,39 @@ jobs:
               with open(dependabot_path, 'r') as f:
                   dependabot_config = yaml.safe_load(f)
 
-              # Extract all reviewers from all package ecosystems
-              all_reviewers = set()
+              # Extract reviewers with their associated directories
+              directory_reviewers = []
               
               if 'updates' in dependabot_config:
                   for update in dependabot_config['updates']:
-                      if 'reviewers' in update:
+                      if 'reviewers' in update and 'directory' in update:
+                          directory = update['directory']
+                          # Normalize directory path - ensure it starts with /
+                          if not directory.startswith('/'):
+                              directory = '/' + directory
+                          # Remove trailing slash unless it's root
+                          if directory != '/' and directory.endswith('/'):
+                              directory = directory.rstrip('/')
+                          
+                          reviewers_for_dir = []
                           for reviewer in update['reviewers']:
                               # Handle both string and object formats
                               if isinstance(reviewer, str):
-                                  all_reviewers.add(reviewer)
+                                  reviewers_for_dir.append(reviewer)
                               elif isinstance(reviewer, dict) and 'username' in reviewer:
-                                  all_reviewers.add(reviewer['username'])
+                                  reviewers_for_dir.append(reviewer['username'])
+                          
+                          if reviewers_for_dir:
+                              directory_reviewers.append({
+                                  'directory': directory,
+                                  'reviewers': reviewers_for_dir
+                              })
 
-              if len(all_reviewers) == 0:
+              if len(directory_reviewers) == 0:
                   print('No reviewers found in dependabot.yml')
                   sys.exit(0)
 
-              # Convert set to sorted list
-              reviewers_list = sorted(list(all_reviewers))
-              print(f'Found reviewers: {reviewers_list}')
+              print(f'Found directory reviewers: {directory_reviewers}')
 
               # Read existing CODEOWNERS file or create new content
               codeowners_path = 'CODEOWNERS'
