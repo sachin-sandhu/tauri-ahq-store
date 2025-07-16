@@ -172,7 +172,7 @@ jobs:
       - name: Output results
         run: |
           if [ "${{ steps.sync.outputs.has_changes }}" = "true" ]; then
-            echo "✅ CODEOWNERS file has been updated and PR created"
+            echo "✅ CODEOWNERS file has been updated and PR created."
           else
             echo "ℹ️ No changes needed - CODEOWNERS is already up to date"
           fi
