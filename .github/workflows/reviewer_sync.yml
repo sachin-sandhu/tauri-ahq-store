@@ -24,131 +24,155 @@ jobs:
           import yaml
           import sys
 
-          try:
-              # Read dependabot.yml file
-              dependabot_path = '.github/dependabot.yml'
-              if not os.path.exists(dependabot_path):
-                  print('dependabot.yml file not found')
-                  sys.exit(0)
+          def main():
+              try:
+                  # Read dependabot.yml file
+                  dependabot_path = '.github/dependabot.yml'
+                  if not os.path.exists(dependabot_path):
+                      print('dependabot.yml file not found')
+                      return False
 
-              with open(dependabot_path, 'r') as f:
-                  dependabot_config = yaml.safe_load(f)
+                  with open(dependabot_path, 'r') as f:
+                      dependabot_config = yaml.safe_load(f)
 
-              # Extract reviewers with their associated directories
-              directory_reviewers = []
-              
-              if 'updates' in dependabot_config:
-                  for update in dependabot_config['updates']:
-                      if 'reviewers' in update and 'directory' in update:
-                          directory = update['directory']
-                          # Normalize directory path - ensure it starts with /
-                          if not directory.startswith('/'):
-                              directory = '/' + directory
-                          # Remove trailing slash unless it's root
-                          if directory != '/' and directory.endswith('/'):
-                              directory = directory.rstrip('/')
-                          
-                          reviewers_for_dir = []
-                          for reviewer in update['reviewers']:
-                              # Handle both string and object formats
-                              if isinstance(reviewer, str):
-                                  reviewers_for_dir.append(reviewer)
-                              elif isinstance(reviewer, dict) and 'username' in reviewer:
-                                  reviewers_for_dir.append(reviewer['username'])
-                          
-                          if reviewers_for_dir:
-                              directory_reviewers.append({
-                                  'directory': directory,
-                                  'reviewers': reviewers_for_dir
-                              })
+                  # Extract reviewers with their associated directories
+                  directory_reviewers = []
+                  
+                  if 'updates' in dependabot_config:
+                      for update in dependabot_config['updates']:
+                          if 'reviewers' in update:
+                              # Handle both single directory and multiple directories
+                              directories = []
+                              if 'directory' in update:
+                                  directories = [update['directory']]
+                              elif 'directories' in update:
+                                  directories = update['directories']
+                              
+                              for directory in directories:
+                                  # Normalize directory path - ensure it starts with /
+                                  if not directory.startswith('/'):
+                                      directory = '/' + directory
+                                  # Remove trailing slash unless it's root
+                                  if directory != '/' and directory.endswith('/'):
+                                      directory = directory.rstrip('/')
+                                  
+                                  reviewers_for_dir = []
+                                  for reviewer in update['reviewers']:
+                                      # Handle both string and object formats
+                                      if isinstance(reviewer, str):
+                                          reviewers_for_dir.append(reviewer)
+                                      elif isinstance(reviewer, dict) and 'username' in reviewer:
+                                          reviewers_for_dir.append(reviewer['username'])
+                                  
+                                  if reviewers_for_dir:
+                                      directory_reviewers.append({
+                                          'directory': directory,
+                                          'reviewers': reviewers_for_dir
+                                      })
 
-              if len(directory_reviewers) == 0:
-                  print('No reviewers found in dependabot.yml')
-                  sys.exit(0)
+                  if len(directory_reviewers) == 0:
+                      print('No reviewers found in dependabot.yml')
+                      return False
 
-              print(f'Found directory reviewers: {directory_reviewers}')
+                  print(f'Found directory reviewers: {directory_reviewers}')
 
-              # Read existing CODEOWNERS file or create new content
-              codeowners_path = 'CODEOWNERS'
-              codeowners_content = ''
-              has_changes = False
+                  # Read existing CODEOWNERS file or create new content
+                  codeowners_path = 'CODEOWNERS'
+                  codeowners_content = ''
+                  has_changes = False
 
-              if os.path.exists(codeowners_path):
-                  with open(codeowners_path, 'r') as f:
-                      codeowners_content = f.read()
+                  if os.path.exists(codeowners_path):
+                      with open(codeowners_path, 'r') as f:
+                          codeowners_content = f.read()
 
-              # Check if we need to add/update the dependabot section
-              dependabot_section = '# Dependabot reviewers (auto-generated from .github/dependabot.yml)'
-              
-              # Create multiple lines for reviewers (one per line)
-              reviewers_lines = []
-              for reviewer in reviewers_list:
-                  formatted_reviewer = reviewer if reviewer.startswith('@') else '@' + reviewer
-                  reviewers_lines.append(f'* {formatted_reviewer}')
-              
-              lines = codeowners_content.split('\n')
-              dependabot_section_index = -1
-              
-              for i, line in enumerate(lines):
-                  if '# Dependabot reviewers' in line:
-                      dependabot_section_index = i
-                      break
-              
-              if dependabot_section_index >= 0:
-                  # Update existing section
-                  next_section_index = -1
-                  for i in range(dependabot_section_index + 1, len(lines)):
-                      if lines[i].startswith('#') and '# Dependabot reviewers' not in lines[i]:
-                          next_section_index = i
+                  # Check if we need to add/update the dependabot section
+                  dependabot_section = '# Dependabot reviewers (auto-generated from .github/dependabot.yml)'
+                  
+                  # Create lines for each directory and its reviewers
+                  new_reviewers_lines = []
+                  for dir_config in directory_reviewers:
+                      directory = dir_config['directory']
+                      reviewers = dir_config['reviewers']
+                      
+                      # Format reviewers
+                      formatted_reviewers = []
+                      for reviewer in reviewers:
+                          formatted_reviewer = reviewer if reviewer.startswith('@') else '@' + reviewer
+                          formatted_reviewers.append(formatted_reviewer)
+                      
+                      # Create CODEOWNERS line: directory followed by reviewers
+                      line = f"{directory} {' '.join(formatted_reviewers)}"
+                      new_reviewers_lines.append(line)
+                  
+                  lines = codeowners_content.split('\n')
+                  dependabot_section_index = -1
+                  
+                  for i, line in enumerate(lines):
+                      if '# Dependabot reviewers' in line:
+                          dependabot_section_index = i
                           break
                   
-                  end_index = next_section_index if next_section_index >= 0 else len(lines)
-                  
-                  # Get current reviewers lines
-                  current_reviewers_lines = []
-                  for i in range(dependabot_section_index + 1, end_index):
-                      if i < len(lines) and lines[i].startswith('* @'):
-                          current_reviewers_lines.append(lines[i])
-                  
-                  # Check if reviewers need updating
-                  if current_reviewers_lines != reviewers_lines:
-                      # Remove old reviewers lines
-                      for i in range(end_index - 1, dependabot_section_index, -1):
-                          if i < len(lines) and lines[i].startswith('* @'):
-                              lines.pop(i)
+                  if dependabot_section_index >= 0:
+                      # Update existing section
+                      next_section_index = -1
+                      for i in range(dependabot_section_index + 1, len(lines)):
+                          if lines[i].startswith('#') and '# Dependabot reviewers' not in lines[i]:
+                              next_section_index = i
+                              break
                       
-                      # Insert new reviewers lines
-                      for i, reviewer_line in enumerate(reviewers_lines):
-                          lines.insert(dependabot_section_index + 1 + i, reviewer_line)
+                      end_index = next_section_index if next_section_index >= 0 else len(lines)
                       
+                      # Get current reviewers lines
+                      current_reviewers_lines = []
+                      for i in range(dependabot_section_index + 1, end_index):
+                          if i < len(lines) and (lines[i].startswith('/') or lines[i].startswith('* @')):
+                              current_reviewers_lines.append(lines[i])
+                      
+                      # Check if reviewers need updating
+                      if current_reviewers_lines != new_reviewers_lines:
+                          # Remove old reviewers lines
+                          for i in range(end_index - 1, dependabot_section_index, -1):
+                              if i < len(lines) and (lines[i].startswith('/') or lines[i].startswith('* @')):
+                                  lines.pop(i)
+                          
+                          # Insert new reviewers lines
+                          for i, line in enumerate(new_reviewers_lines):
+                              lines.insert(dependabot_section_index + 1 + i, line)
+                          
+                          has_changes = True
+                  else:
+                      # Add new section at the end
+                      if codeowners_content.strip() != '':
+                          lines.append('')
+                      lines.append(dependabot_section)
+                      for line in new_reviewers_lines:
+                          lines.append(line)
                       has_changes = True
-              else:
-                  # Add new section at the end
-                  if codeowners_content.strip() != '':
-                      lines.append('')
-                  lines.append(dependabot_section)
-                  for reviewer_line in reviewers_lines:
-                      lines.append(reviewer_line)
-                  has_changes = True
 
-              if has_changes:
-                  new_content = '\n'.join(lines)
-                  with open(codeowners_path, 'w') as f:
-                      f.write(new_content)
-                  print('CODEOWNERS file updated')
-                  
-                  # Set output for next step
-                  print('has_changes=true')
-                  with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-                      f.write('has_changes=true\n')
-              else:
-                  print('No changes needed to CODEOWNERS file')
-                  with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-                      f.write('has_changes=false\n')
+                  if has_changes:
+                      new_content = '\n'.join(lines)
+                      with open(codeowners_path, 'w') as f:
+                          f.write(new_content)
+                      print('CODEOWNERS file updated')
+                      return True
+                  else:
+                      print('No changes needed to CODEOWNERS file')
+                      return False
 
-          except Exception as error:
-              print(f'Error: {error}')
-              sys.exit(1)
+              except Exception as error:
+                  print(f'Error: {error}')
+                  import traceback
+                  traceback.print_exc()
+                  sys.exit(1)
+
+          # Run main function and set outputs
+          if main():
+              print('has_changes=true')
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write('has_changes=true\n')
+          else:
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write('has_changes=false\n')
           EOF
 
       - name: Create Pull Request
@@ -162,10 +186,10 @@ jobs:
             This PR automatically syncs the reviewers from `.github/dependabot.yml` to the `CODEOWNERS` file.
             
             ### Changes
-            - Updated `CODEOWNERS` file with reviewers from dependabot configuration
-            - Each reviewer is now listed on a separate line for better readability
+            - Updated `CODEOWNERS` file with directory-specific reviewers from dependabot configuration
+            - Each directory path is paired with its corresponding reviewers
             
-            This ensures that the same people who review dependabot PRs are also set as code owners for general repository changes.
+            This ensures that the same people who review dependabot PRs for specific directories are also set as code owners for those directories.
             
             ---
             *This PR was created automatically by the `sync-dependabot-reviewers` workflow.*
