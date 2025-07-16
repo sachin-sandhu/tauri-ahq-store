@@ -1,11 +1,6 @@
 name: Sync Dependabot Reviewers to CODEOWNERS
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/dependabot.yml'
   workflow_dispatch:
 
 permissions:
@@ -173,4 +168,3 @@ jobs:
           else
             echo "ℹ️ No changes needed - CODEOWNERS is already up to date"
           fi
-
