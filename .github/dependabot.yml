@@ -15,7 +15,7 @@ updates:
     open-pull-requests-limit: 31
     reviewers: 
       - "sachin-sandhu"
-      - "org/cloud-reviewers"
+      - "sachin-sandhu33"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/1" # Location of package manifests
@@ -26,7 +26,7 @@ updates:
     open-pull-requests-limit: 31
     reviewers: 
       - "sachin-sandhu2"
-      - "org/cloud2-reviewers"
+      - "org/cloud-reviewers"
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/2" # Location of package manifests
@@ -37,4 +37,4 @@ updates:
     open-pull-requests-limit: 31   
     reviewers: 
       - "sachin-sandhu3"
-      - "org/cloud3-reviewers"
+      - "org/cloud-reviewers"
