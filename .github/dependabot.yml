@@ -36,5 +36,5 @@ updates:
       cronjob: "0 0 5 31 2 ?"
     open-pull-requests-limit: 31   
     reviewers: 
-      - "sachin-sandhu"
+      - "sachin-sandhu3"
       - "robaiken"
