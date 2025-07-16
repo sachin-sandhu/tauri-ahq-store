@@ -114,7 +114,8 @@ jobs:
                   if codeowners_content.strip() != '':
                       lines.append('')
                   lines.append(dependabot_section)
-                  lines.append(reviewers_line)
+                  for reviewer_line in reviewers_lines:
+                      lines.append(reviewer_line)
                   has_changes = True
 
               if has_changes:
@@ -149,13 +150,7 @@ jobs:
             
             ### Changes
             - Updated `CODEOWNERS` file with reviewers from dependabot configuration
-            
-            ### Reviewers Found
-            The following reviewers were extracted from the dependabot configuration:
-            
-            ```yaml
-            ${{ steps.sync.outputs.reviewers }}
-            ```
+            - Each reviewer is now listed on a separate line for better readability
             
             This ensures that the same people who review dependabot PRs are also set as code owners for general repository changes.
             
