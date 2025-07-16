@@ -5,7 +5,9 @@
   "private": true,
   "license": "Creative Commons Attribution Non Commercial 3.0",
   "dependencies": {
-    "@radix-ui/react-context-menu": "^2.2.3"
+    "@octokit/rest": "^21.1.1",
+    "@radix-ui/react-context-menu": "^2.2.3",
+    "js-yaml": "^4.1.0"
   },
   "scripts": {
     "start": "cross-env BROWSER=none rsbuild dev",
