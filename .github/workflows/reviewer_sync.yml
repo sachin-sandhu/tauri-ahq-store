@@ -179,6 +179,9 @@ jobs:
 
                   if has_changes:
                       new_content = '\n'.join(lines)
+                      # Ensure the file ends with a newline character (EOL)
+                      if not new_content.endswith('\n'):
+                          new_content += '\n'
                       with open(codeowners_path, 'w') as f:
                           f.write(new_content)
                       print('CODEOWNERS file updated')
