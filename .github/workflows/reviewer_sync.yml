@@ -1,11 +1,6 @@
 name: Sync Dependabot Reviewers to CODEOWNERS
 
 on:
-  push:
-    branches:
-      - dev
-    paths:
-      - '.github/dependabot.yml'
   workflow_dispatch:
 
 permissions:
@@ -28,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install js-yaml @octokit/rest
+          npm install js-yaml
 
       - name: Sync reviewers to CODEOWNERS
         id: sync
@@ -173,4 +168,3 @@ jobs:
           else
             echo "ℹ️ No changes needed - CODEOWNERS is already up to date"
           fi
-
