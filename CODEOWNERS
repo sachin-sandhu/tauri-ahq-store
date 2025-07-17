@@ -65,3 +65,9 @@ apps/ @octocat
 # subdirectory, as this subdirectory has its own owner @doctocat
 /apps/ @octocat
 /apps/github @doctocat
+
+
+# Dependabot reviewers (auto-generated from .github/dependabot.yml)
+/* @sachin-sandhu @randhircs
+/1/ @thavaahariharangit @abhishekbhaskar
+/2/ @sachin-sandhu3 @robaiken
