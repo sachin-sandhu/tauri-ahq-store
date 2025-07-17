@@ -110,18 +110,21 @@ jobs:
                   # Check if we need to add/update the dependabot section
                   dependabot_section = '# Dependabot reviewers (auto-generated from .github/dependabot.yml)'
                   
-                  # Create lines for each directory and its reviewers (one line per reviewer)
+                  # Create lines for each directory and its reviewers
                   new_reviewers_lines = []
                   for dir_config in directory_reviewers:
                       directory = dir_config['directory']
                       reviewers = dir_config['reviewers']
                       
-                      # Create a separate line for each reviewer
+                      # Format reviewers
+                      formatted_reviewers = []
                       for reviewer in reviewers:
                           formatted_reviewer = reviewer if reviewer.startswith('@') else '@' + reviewer
-                          # Create CODEOWNERS line: directory followed by single reviewer
-                          line = f"{directory} {formatted_reviewer}"
-                          new_reviewers_lines.append(line)
+                          formatted_reviewers.append(formatted_reviewer)
+                      
+                      # Create CODEOWNERS line: directory followed by reviewers
+                      line = f"{directory} {' '.join(formatted_reviewers)}"
+                      new_reviewers_lines.append(line)
                   
                   lines = codeowners_content.split('\n')
                   dependabot_section_index = -1
